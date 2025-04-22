@@ -1,0 +1,12 @@
+import React from 'react'
+
+const App = () => {
+  console.log('ciao')
+  return (
+    <div>
+      <h3>App</h3>
+    </div>
+  )
+}
+
+export default App
