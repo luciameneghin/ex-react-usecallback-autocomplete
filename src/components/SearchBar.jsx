@@ -1,17 +1,27 @@
-import { useEffect, useState } from "react";
+function debounce(callback, delay) {
+  let timer;
+  return (value) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      callback(value);
+    }, delay);
+  }
+};
 
+
+import { useEffect, useState, useCallback } from "react";
 
 const SearchBar = () => {
   const [search, setSearch] = useState('');
   const [filteredItems, setFilteredItems] = useState([]);
 
-  const endpoint = `https://boolean-spec-frontend.vercel.app/freetestapi/products?search=${search}`
 
   const handleSelect = (name) => {
     setSearch(name)
   }
 
-  useEffect(() => {
+  const fetching = useCallback(debounce((search) => {
+    const endpoint = `https://boolean-spec-frontend.vercel.app/freetestapi/products?search=${search}`
     fetch(endpoint)
       .then(res => res.json())
       .then(data => {
@@ -19,6 +29,10 @@ const SearchBar = () => {
         console.log(data)
       })
       .catch(err => console.log(err))
+  }, 300), [])
+
+  useEffect(() => {
+    fetching(search)
   }, [search])
 
   return (
